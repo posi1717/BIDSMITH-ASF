@@ -7,3 +7,4 @@ fastapi>=0.115,<1
 uvicorn[standard]>=0.30,<1
 composio>=0.21,<1
 pytest>=8,<9
+uvicorn[standard]
