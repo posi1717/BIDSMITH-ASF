@@ -1,175 +1,207 @@
 # TODS Gateway
 
-**TODS Gateway is the regulatory and document-assurance gateway for public-service work.** It is the first controlled entry point for people, products, and AI agents that need to use rules, guidance, evidence, documents, or reports—and the final assurance checkpoint before material outputs are relied upon.
+## Tenders Official Document Support Platform
+### Opportunity-to-Award Gateway for UK Public Procurement
 
-TODS is designed to be direct about evidence. It distinguishes sourced facts from interpretation, exposes uncertainty and limitations, retains provenance, and requires human review when the available evidence cannot support a dependable answer.
+TODS Gateway is an evidence-led public-procurement document inspection and assurance platform for the United Kingdom. Its purpose is to support the checking of tender, procurement, contract and supporting documents against applicable UK procurement law, regulation, policy notes, guidance and controlled evidence before publication, submission, award or reliance.[cite:37][cite:38]
 
-## Public-procurement focus
+TODS is designed to inspect documentation throughout the Opportunity-to-Award lifecycle. The initial operational focus includes the Procurement Act 2023, the Procurement Regulations 2024, Procurement Policy Notes including PPN 02/24, and related official UK Government guidance and authoritative source documents.[cite:38][cite:59]
 
-TODS is focused initially on **trusted, evidence-based, and regulation-compliant documentation for public procurement**. Public procurement is more than an administrative process: it is one of the principal mechanisms through which governments invest public money, deliver essential services, build infrastructure, support markets, and pursue economic, environmental, and social outcomes.
+TODS does not provide legal advice, certify that a document is compliant, approve an award, or authorise a submission. All consequential findings require accountable human review and sign-off.[cite:38][cite:44]
 
-London provides an unusually valuable real-world learning environment. Its public-service landscape brings together the Greater London Authority, 32 London boroughs, the City of London Corporation, Transport for London, NHS bodies, social and community housing providers, Net Zero programmes, and UK Government requirements. These institutions have different mandates, policies, procurement duties, and accountability structures, yet often need to work together for the same city and communities.
+## Core Purpose
 
-This environment has made the core problem clear: the challenge is not simply to produce more documents or introduce more AI. Important public-procurement documents must be trustworthy. Their sources should be authoritative, their evidence traceable, their regulatory context understood, their versions current, their limitations visible, and their final use accountable to a responsible person.
+TODS exists to identify missing requirements, incomplete evidence, inconsistent information, document risks and required actions in UK public-procurement documentation before those defects become consequential in the procurement lifecycle.[cite:38]
 
-TODS is therefore being developed as an evidence-first assurance layer for public-procurement documents and regulated public-sector information. The aim is to give people, public organisations, digital services, and AI agents a common controlled process for checking provenance, applicable rules, document integrity, scope, uncertainty, and review requirements before information is relied upon.
-
-## Trust in the AI era
-
-Every country must consider how to preserve public trust as AI becomes involved in preparing, interpreting, and reviewing documents connected to public expenditure. If trustworthy, evidence-linked, and human-accountable documentation becomes part of the emerging global standard for public procurement in the AI era, TODS seeks to make a small but meaningful contribution to shaping that standard and the relationship of trust between technology, government, and people.
-
-This work should not be developed in isolation. We welcome direct guidance and constructive challenge from specialists in public procurement, regulation, government documentation, AI governance, public administration, assurance, security, and responsible technology. Expert scrutiny can help test assumptions, identify missing safeguards, and ensure that the system develops in a genuinely useful and responsible direction.
-
-We also welcome introductions to public bodies, research institutions, responsible technology partners, funders, and other supporters who share this purpose. Such connections could create opportunities to validate the approach, conduct carefully governed pilot projects, and determine where TODS can deliver measurable public value.
-
-References to London institutions describe the regulatory and operational context from which the project learns; they do not imply endorsement, partnership, deployment, or approval by any named organisation.
-
-## Enterprise console
-
-The repository includes a responsive enterprise assurance console backed by the executable FastAPI service.
-
-```bash
-python -m venv .venv
-# Windows: .\.venv\Scripts\Activate.ps1
-# macOS/Linux: source .venv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-pip install -e "./SKBUK[test]"
-uvicorn main:app --host 127.0.0.1 --port 8000
-```
-
-Open `http://127.0.0.1:8000/`. The UI can submit source-labelled material, display actual calibration/routing results, preserve a correlation ID, and export the decision-support record. Every consequential result remains explicitly subject to accountable human review.
-
-Container start:
-
-```bash
-docker compose up --build
-```
-
-See [enterprise console operations](docs/operations/ENTERPRISE_CONSOLE_OPERATIONS.md) and [service readiness](docs/operations/SERVICE_READINESS.md) before deployment.
-
-## Mission
-
-Every TODS-connected project should pass regulated questions, material documents, reports, and agent actions through a consistent assurance boundary:
-
-1. Identify the caller, intended use, and applicable scope.
-2. Verify source authority, document identity, version, and freshness.
-3. Bind material claims to traceable evidence.
-4. Apply the appropriate specialist MOUUK module and policy controls.
-5. Return a clear assurance outcome, limitations, and audit reference.
-6. Require accountable human approval where risk or policy requires it.
-
-TODS is not a substitute for legal advice or an accountable public authority. It is an evidence-first control and assurance system.
-
-## Architecture
+The platform is intended to help procurement teams, bid teams, document reviewers and governed AI systems inspect documents from the first opportunity through to final award and submission readiness. It is an inspection and assurance gateway, not an automatic approval engine.[cite:44][cite:38]
 
 ```text
-Person / Product / AI Agent
-             |
-             v
-+---------------------------------------------+
-|                 TODS Gateway                |
-| identity | scope | policy | audit | outcome |
-+---------------------------------------------+
-             |
-       +-----+-----+
-       |           |
-       v           v
-+-------------+  +----------------------------+
-|    SKBUK    |  |           MOUUK            |
-| acquisition |  | 34 specialist modules      |
-| custody      |  | rules, analysis, evidence  |
-| provenance   |  | and review requirements    |
-| calibration  |  +----------------------------+
-+-------------+
-       |           |
-       +-----+-----+
-             v
- Evidence bundle -> claim -> assurance outcome -> audit record
+Opportunity
+    ↓
+Requirement discovery
+    ↓
+Document and evidence collection
+    ↓
+Tender-document inspection
+    ↓
+Correction and completion
+    ↓
+Human review and sign-off
+    ↓
+Submission / publication / award reliance
 ```
 
-- **TODS Gateway** is the control plane and common interface.
-- **SKBUK** is the governed acquisition, custody, provenance, versioning, and initial calibration layer. The original UK public-sector procurement collector remains an essential subsystem here.
-- **MOUUK** is the specialist knowledge and reasoning layer. Stable module identities are defined by `uk_kb_collector/modules.yaml` from `MOUUK-0001` through `MOUUK-0034`.
+## What TODS Checks
 
-See [the architecture record](docs/architecture/TODS_GATEWAY_ARCHITECTURE_RECORD.md) for boundaries and trust rules.
+TODS checks whether public-procurement documentation is complete, evidenced, current, traceable and aligned with applicable requirements. It is intended to make visible what is missing, what is inconsistent, what evidence exists, what evidence is absent and what action is required next.[cite:38][cite:59]
 
-## Current service baseline
+The platform should support inspection of at least the following:
 
-- `GET /` serves the enterprise assurance console.
-- `GET /api/v1/status` reports the current service capabilities and missing controls.
-- `POST /api/v1/process-regulation` performs baseline SKBUK calibration and direct specialist processing for MOUUK-0001.
-- `uk_kb_collector/` provides the collector, evidence/provenance contracts, canonical 34-module registry, and independently loadable specialist workers.
+- Tender notices and publication information.
+- Procurement documents, specifications and scope definitions.
+- Evaluation criteria, award criteria and procedure design.
+- Supplier-selection, exclusion and debarment records.
+- Transparency and procurement-data obligations.
+- Contract-management, performance, open-book and change records.
+- Supporting evidence, version history, provenance and audit state.[cite:59]
 
-Other routes and modules must not be described as production assurance until their evidence, policy, authentication, tests, audit controls, and deployment gates are satisfied.
+## Architecture Overview
 
-## Assurance language
-
-TODS documentation and APIs use these target outcomes:
-
-- `VERIFIED`
-- `VERIFIED_WITH_LIMITATIONS`
-- `NEEDS_HUMAN_REVIEW`
-- `INSUFFICIENT_EVIDENCE`
-- `STALE_SOURCE_RISK`
-- `OUT_OF_SCOPE`
-- `BLOCKED`
-
-The current baseline does **not** issue production-grade `VERIFIED` decisions. Until the required controls are implemented, consequential outputs default to review rather than implied certainty.
-
-## Repository map
+TODS is built on a two-layer architecture with a clear processing boundary. SKBUK is the source-of-truth document store and governance layer, while MOUUK is the expert-knowledge layer comprising 34 specialist modules. MOUUK does not own original source PDFs; it receives references and manifests delivered from SKBUK.[cite:37][cite:59]
 
 ```text
-.
-├── main.py                         # FastAPI gateway and console routes
-├── static/                         # Enterprise console HTML, CSS, JavaScript
-├── Dockerfile                      # Non-root service image
-├── compose.yaml                    # Local/container service definition
-├── SKBUK/                          # SKBUK service/calibration implementation
-├── MOUUK/                          # Direct MOUUK integration
-├── uk_kb_collector/                # Collector, contracts, modules, workers
-├── Knowledge_Base/                 # Governed knowledge-base workspace
-├── docs/
-│   ├── architecture/               # Canonical system architecture
-│   ├── governance/                 # Document and trust governance
-│   ├── operations/                 # API, console, and collector operations
-│   └── archive/                    # Non-canonical historical notes
-├── supabase/                       # Database migration history
-└── tests/                          # Runtime, architecture, schema, and governance tests
+UKKB /
+├── SKBUK /
+│   ├── documents /
+│   │   └── <document_id> /
+│   │       ├── original.pdf
+│   │       └── metadata.json
+│   ├── delivery /
+│   │   └── MOUUK /
+│   │       ├── MOUUK-0001.json
+│   │       ├── MOUUK-0002.json
+│   │       └── ...
+│   ├── audit /
+│   │   └── events.jsonl
+│   └── source_registry.yaml
+│
+├── MOUUK /
+│   ├── MOUUK-0001/ ... MOUUK-0034/
+│   │   ├── manifest.yaml
+│   │   ├── rules/
+│   │   └── references/
+│   └── ...
+│
+└── uk_kb_collector /
 ```
 
-## Test
+The current ingestion boundary is explicit: `discover -> validate -> store in SKBUK -> provenance/audit -> deliver reference manifest -> MOUUK`. Only after the raw corpus is accepted should later phases such as extraction, normalisation, chunking, embedding and retrieval run.[cite:59]
 
-Python 3.12 is used by CI.
+## SKBUK
 
-```bash
-python -m pytest -q
+SKBUK is the Knowledge Supply and Governance layer. It is responsible for storing original PDFs and their metadata, maintaining the approved authoritative-source registry, recording provenance and audit events, and delivering reference manifests to MOUUK modules.[cite:59]
+
+Each source document in SKBUK should retain, where available, its source URL, publisher, version, hash and related metadata. This makes SKBUK the source-of-truth document store rather than a temporary download cache.[cite:59]
+
+SKBUK responsibilities include:
+
+- Discovering approved authoritative sources.
+- Validating source and publisher.
+- Storing original PDFs and metadata.
+- Recording provenance, version and audit events.
+- Delivering reference manifests to specialist modules.
+- Preserving source-of-truth control over original documents.[cite:59]
+
+## MOUUK
+
+MOUUK is the expert-knowledge layer. Its 34 modules divide procurement expertise into controlled specialist responsibilities so that inspection can be performed by requirement domain rather than by a single general-purpose reasoning layer.[cite:59]
+
+The catalogue defines MOUUK as a specialist layer that uses delivery references only. No MOUUK module may silently replace, modify or become the canonical owner of the original PDF.[cite:59]
+
+### Example specialist modules
+
+| Code | Module | Responsibility |
+|---|---|---|
+| MOUUK-0001 | Procurement Act 2023 | Statutory framework, duties, procedures, thresholds and notices [cite:59] |
+| MOUUK-0002 | Procurement Regulations 2024 | Regulations made under the Procurement Act, prescribed information and procedures [cite:59] |
+| MOUUK-0003 | Legacy Procurement Regulations | Pre-2024 procurement regimes and transitional context [cite:59] |
+| MOUUK-0005 | Procurement Policy Notes | PPN applicability, mandatory and recommended actions, effective dates [cite:59] |
+| MOUUK-0007 | Plan | Procurement planning and pre-market strategy [cite:59] |
+| MOUUK-0008 | Define | Requirements, scope and specification definition [cite:59] |
+| MOUUK-0009 | Procure | Tendering, evaluation, award and compliance execution stage [cite:59] |
+| MOUUK-0010 | Manage | Post-award contract-management stage [cite:59] |
+| MOUUK-0015 | Transparency and Procurement Data | Publication duties, notices and procurement-data obligations [cite:59] |
+| MOUUK-0023 | Source Authority | Whether evidence is authoritative and from an approved source tier [cite:59] |
+| MOUUK-0024 | Temporal and Version Intelligence | Document currency, update dates and supersession [cite:59] |
+| MOUUK-0026 | Evidence and Provenance | Traceability of every knowledge claim [cite:59] |
+| MOUUK-0028 | Notices, Standstill and Remedies | Award notices, standstill and remedies [cite:59] |
+| MOUUK-0030 | Conflicts of Interest | Identification, mitigation and records [cite:59] |
+| MOUUK-0031 | SME, VCSE and Reserved Contracts | Access, reservation and participation policy outcomes [cite:59] |
+| MOUUK-0034 | Insurance and Mandatory Policies | Insurance requirements and policy evidence [cite:59] |
+
+The full MOUUK catalogue spans legal instruments, policy notes, procurement lifecycle stages, transparency, supplier participation, sustainability, security, data governance, provenance, procedural controls and contract-management topics.[cite:59]
+
+## Regulatory and Policy Focus
+
+The initial inspection scope should be centred on core UK public-procurement instruments and their supporting guidance. This includes the Procurement Act 2023, the Procurement Regulations 2024, applicable Procurement Policy Notes such as PPN 02/24, and legacy regimes where transitional context still matters.[cite:38][cite:59]
+
+| Instrument or source | Inspection role |
+|---|---|
+| Procurement Act 2023 | Core statutory duties, procedures, thresholds, notices and framework concepts [cite:59] |
+| Procurement Regulations 2024 | Regulatory requirements, prescribed information and procedures [cite:59] |
+| Procurement Policy Notes | Policy applicability, effective dates and required actions, including PPN 02/24 within the PPN domain [cite:59] |
+| Official guidance | Cabinet Office, gov.uk, legislation.gov.uk and other official guidance where applicable [cite:59] |
+| Legacy regulations | Transitional procurement context under pre-2024 regimes [cite:59] |
+
+## Inspection Output
+
+TODS should produce an inspection-oriented output rather than a generic chatbot answer. The purpose of the output is to show what requirement was checked, what evidence supports or fails to support it, which specialist module produced the finding, what source/version was used, what risk exists and what action is required next.[cite:38][cite:59]
+
+A practical TODS inspection record should capture at least:
+
+- Inspection ID or correlation ID.
+- Requirement or control being checked.
+- Applicable source and version.
+- Evidence item or evidence gap.
+- Specialist module responsible.
+- Finding state such as supported, missing, inconsistent, unclear or escalated.
+- Required corrective action.
+- Human-review status and sign-off state.[cite:59]
+
+## Assurance Principles
+
+TODS should operate on these principles:
+
+1. Evidence before assertion.
+2. Official source governance through SKBUK.
+3. Version-aware inspection.
+4. Requirement traceability.
+5. Specialist-module accountability.
+6. Human review before consequential use.
+7. No automatic legal or procurement approval.
+8. Auditability of source, version, finding and action.[cite:38][cite:59]
+
+Model confidence must never be treated as a replacement for evidence. Likewise, a specialist module must never become the owner of the original document it analyses.[cite:59]
+
+## Human Review Boundary
+
+TODS supports document inspection and assurance, but it does not replace accountable human judgement. It should be used to support review before publication, submission, award or other consequential use in public procurement.[cite:44][cite:38]
+
+A human reviewer remains responsible for accepting findings, requiring more evidence, correcting documents, escalating issues and formally signing off the result.[cite:44]
+
+## Ecosystem Position
+
+Within the wider HoneyB2024 ecosystem, TODS Gateway is the assurance and inspection gate for procurement-document work. It is intended to operate alongside document-workflow and bid-production systems, but with a distinct role as the evidence-led checking and governance layer.[cite:37]
+
+```text
+Bidsmith / tender work
+        ↓
+Doccute / workflow operations
+        ↓
+TODS Gateway
+  ├─ SKBUK source governance
+  ├─ MOUUK specialist inspection
+  └─ Human review and sign-off
 ```
 
-The current branch passes 67 tests in a clean checkout with declared root and `SKBUK[test]` dependencies installed. The service console, status endpoint, and regulatory assessment path also pass a live local smoke test.
+## Implementation Priorities
 
-Run the collector in dry-run mode:
+The current implementation priorities should remain aligned with the authoritative processing boundary:
 
-```bash
-python -m uk_kb_collector.main --dry-run
-```
+1. Preserve SKBUK as the authoritative source-of-truth document layer.
+2. Maintain the approved source registry and provenance records.
+3. Maintain the MOUUK 34-module catalogue and specialist boundaries.
+4. Deliver authoritative references from SKBUK to MOUUK.
+5. Complete raw-PDF corpus acceptance before later extraction or retrieval phases.
+6. Build inspection outputs that show requirements, evidence, risk and action.
+7. Maintain audit records and version awareness across the lifecycle.[cite:37][cite:59]
 
-See [collector operations](docs/operations/COLLECTOR_OPERATIONS.md) before running production collection.
+## Documentation Rule
 
-## Canonical documents
+TODS should be maintained under a documentation-first discipline. Anyone working on the project should read the authoritative manuals, catalogues and current approved documentation before changing architecture, README content, modules, processing boundaries or operational claims.[cite:48]
 
-- [Master change list](docs/MASTER_CHANGE_LIST.md)
-- [Architecture record](docs/architecture/TODS_GATEWAY_ARCHITECTURE_RECORD.md)
-- [Canonical document register](docs/governance/CANONICAL_DOCUMENT_REGISTER.md)
-- [Data governance and lifecycle](docs/governance/DATA_GOVERNANCE_AND_LIFECYCLE.md)
-- [Configuration precedence](docs/governance/CONFIGURATION_PRECEDENCE.md)
-- [API deployment register](docs/operations/API_DEPLOYMENT_REGISTER.md)
-- [Enterprise console operations](docs/operations/ENTERPRISE_CONSOLE_OPERATIONS.md)
-- [Service readiness](docs/operations/SERVICE_READINESS.md)
-- [MOUUK module catalogue](docs/MOUUK_MODULE_CATALOGUE.md)
-- [Registry schema](docs/REGISTRY_SCHEMA.md)
-- [SKBUK architecture](SKBUK_ARCHITECTURE.md)
+Obsolete instructions, superseded temporary installation notes and misleading implementation claims should be reviewed and removed from the active working path once their historical role has been assessed.[cite:47]
 
-## Change safety
+## Disclaimer
 
-This baseline preserves the collector, SKBUK, all 34 stable MOUUK identities, source manifests, migrations, evidence records, tests, and historical Git record. Runtime logs, temporary downloads, caches, credentials, and build artefacts must not be committed. Destructive cleanup requires a separate dependency and retention review.
+TODS Gateway supports evidence-led inspection of UK public-procurement documents. It does not provide legal advice, does not certify legal compliance and does not replace accountable procurement, legal or governance review.[cite:44][cite:38]
