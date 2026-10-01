@@ -1,207 +1,155 @@
-# TODS Gateway
+﻿# TODS Gateway
 
 ## Tenders Official Document Support Platform
-### Opportunity-to-Award Gateway for UK Public Procurement
 
-TODS Gateway is an evidence-led public-procurement document inspection and assurance platform for the United Kingdom. Its purpose is to support the checking of tender, procurement, contract and supporting documents against applicable UK procurement law, regulation, policy notes, guidance and controlled evidence before publication, submission, award or reliance.[cite:37][cite:38]
+TODS Gateway is an evidence-led inspection and assurance platform for UK public-procurement documents. It supports review across the opportunity-to-award lifecycle while preserving source authority, version control, provenance and accountable human sign-off.
 
-TODS is designed to inspect documentation throughout the Opportunity-to-Award lifecycle. The initial operational focus includes the Procurement Act 2023, the Procurement Regulations 2024, Procurement Policy Notes including PPN 02/24, and related official UK Government guidance and authoritative source documents.[cite:38][cite:59]
+TODS is not legal advice, an automatic compliance certificate, an award approval system or a replacement for accountable procurement and legal review.
 
-TODS does not provide legal advice, certify that a document is compliant, approve an award, or authorise a submission. All consequential findings require accountable human review and sign-off.[cite:38][cite:44]
-
-## Core Purpose
-
-TODS exists to identify missing requirements, incomplete evidence, inconsistent information, document risks and required actions in UK public-procurement documentation before those defects become consequential in the procurement lifecycle.[cite:38]
-
-The platform is intended to help procurement teams, bid teams, document reviewers and governed AI systems inspect documents from the first opportunity through to final award and submission readiness. It is an inspection and assurance gateway, not an automatic approval engine.[cite:44][cite:38]
+## Core workflow
 
 ```text
-Opportunity
-    ↓
-Requirement discovery
-    ↓
-Document and evidence collection
-    ↓
-Tender-document inspection
-    ↓
-Correction and completion
-    ↓
-Human review and sign-off
-    ↓
-Submission / publication / award reliance
+Opportunity -> Plan -> Define -> Procure -> Evaluate -> Award -> Manage
 ```
 
-## What TODS Checks
-
-TODS checks whether public-procurement documentation is complete, evidenced, current, traceable and aligned with applicable requirements. It is intended to make visible what is missing, what is inconsistent, what evidence exists, what evidence is absent and what action is required next.[cite:38][cite:59]
-
-The platform should support inspection of at least the following:
-
-- Tender notices and publication information.
-- Procurement documents, specifications and scope definitions.
-- Evaluation criteria, award criteria and procedure design.
-- Supplier-selection, exclusion and debarment records.
-- Transparency and procurement-data obligations.
-- Contract-management, performance, open-book and change records.
-- Supporting evidence, version history, provenance and audit state.[cite:59]
-
-## Architecture Overview
-
-TODS is built on a two-layer architecture with a clear processing boundary. SKBUK is the source-of-truth document store and governance layer, while MOUUK is the expert-knowledge layer comprising 34 specialist modules. MOUUK does not own original source PDFs; it receives references and manifests delivered from SKBUK.[cite:37][cite:59]
+## UKKB architecture
 
 ```text
-UKKB /
-├── SKBUK /
-│   ├── documents /
-│   │   └── <document_id> /
-│   │       ├── original.pdf
-│   │       └── metadata.json
-│   ├── delivery /
-│   │   └── MOUUK /
-│   │       ├── MOUUK-0001.json
-│   │       ├── MOUUK-0002.json
-│   │       └── ...
-│   ├── audit /
-│   │   └── events.jsonl
-│   └── source_registry.yaml
-│
-├── MOUUK /
-│   ├── MOUUK-0001/ ... MOUUK-0034/
-│   │   ├── manifest.yaml
-│   │   ├── rules/
-│   │   └── references/
-│   └── ...
-│
-└── uk_kb_collector /
+SKBUK (source-of-truth documents and governance)
+        -> delivery references/manifests
+MOUUK (34 specialist expert-knowledge modules)
+        -> inspection findings and evidence traceability
+TODS review output -> human review and sign-off
 ```
-
-The current ingestion boundary is explicit: `discover -> validate -> store in SKBUK -> provenance/audit -> deliver reference manifest -> MOUUK`. Only after the raw corpus is accepted should later phases such as extraction, normalisation, chunking, embedding and retrieval run.[cite:59]
 
 ## SKBUK
 
-SKBUK is the Knowledge Supply and Governance layer. It is responsible for storing original PDFs and their metadata, maintaining the approved authoritative-source registry, recording provenance and audit events, and delivering reference manifests to MOUUK modules.[cite:59]
+SKBUK is the source-of-truth document store and governance layer. It stores original PDFs, metadata, source URLs, publishers, versions, hashes, source-registry decisions and audit events.
 
-Each source document in SKBUK should retain, where available, its source URL, publisher, version, hash and related metadata. This makes SKBUK the source-of-truth document store rather than a temporary download cache.[cite:59]
-
-SKBUK responsibilities include:
-
-- Discovering approved authoritative sources.
-- Validating source and publisher.
-- Storing original PDFs and metadata.
-- Recording provenance, version and audit events.
-- Delivering reference manifests to specialist modules.
-- Preserving source-of-truth control over original documents.[cite:59]
-
-## MOUUK
-
-MOUUK is the expert-knowledge layer. Its 34 modules divide procurement expertise into controlled specialist responsibilities so that inspection can be performed by requirement domain rather than by a single general-purpose reasoning layer.[cite:59]
-
-The catalogue defines MOUUK as a specialist layer that uses delivery references only. No MOUUK module may silently replace, modify or become the canonical owner of the original PDF.[cite:59]
-
-### Example specialist modules
-
-| Code | Module | Responsibility |
-|---|---|---|
-| MOUUK-0001 | Procurement Act 2023 | Statutory framework, duties, procedures, thresholds and notices [cite:59] |
-| MOUUK-0002 | Procurement Regulations 2024 | Regulations made under the Procurement Act, prescribed information and procedures [cite:59] |
-| MOUUK-0003 | Legacy Procurement Regulations | Pre-2024 procurement regimes and transitional context [cite:59] |
-| MOUUK-0005 | Procurement Policy Notes | PPN applicability, mandatory and recommended actions, effective dates [cite:59] |
-| MOUUK-0007 | Plan | Procurement planning and pre-market strategy [cite:59] |
-| MOUUK-0008 | Define | Requirements, scope and specification definition [cite:59] |
-| MOUUK-0009 | Procure | Tendering, evaluation, award and compliance execution stage [cite:59] |
-| MOUUK-0010 | Manage | Post-award contract-management stage [cite:59] |
-| MOUUK-0015 | Transparency and Procurement Data | Publication duties, notices and procurement-data obligations [cite:59] |
-| MOUUK-0023 | Source Authority | Whether evidence is authoritative and from an approved source tier [cite:59] |
-| MOUUK-0024 | Temporal and Version Intelligence | Document currency, update dates and supersession [cite:59] |
-| MOUUK-0026 | Evidence and Provenance | Traceability of every knowledge claim [cite:59] |
-| MOUUK-0028 | Notices, Standstill and Remedies | Award notices, standstill and remedies [cite:59] |
-| MOUUK-0030 | Conflicts of Interest | Identification, mitigation and records [cite:59] |
-| MOUUK-0031 | SME, VCSE and Reserved Contracts | Access, reservation and participation policy outcomes [cite:59] |
-| MOUUK-0034 | Insurance and Mandatory Policies | Insurance requirements and policy evidence [cite:59] |
-
-The full MOUUK catalogue spans legal instruments, policy notes, procurement lifecycle stages, transparency, supplier participation, sustainability, security, data governance, provenance, procedural controls and contract-management topics.[cite:59]
-
-## Regulatory and Policy Focus
-
-The initial inspection scope should be centred on core UK public-procurement instruments and their supporting guidance. This includes the Procurement Act 2023, the Procurement Regulations 2024, applicable Procurement Policy Notes such as PPN 02/24, and legacy regimes where transitional context still matters.[cite:38][cite:59]
-
-| Instrument or source | Inspection role |
-|---|---|
-| Procurement Act 2023 | Core statutory duties, procedures, thresholds, notices and framework concepts [cite:59] |
-| Procurement Regulations 2024 | Regulatory requirements, prescribed information and procedures [cite:59] |
-| Procurement Policy Notes | Policy applicability, effective dates and required actions, including PPN 02/24 within the PPN domain [cite:59] |
-| Official guidance | Cabinet Office, gov.uk, legislation.gov.uk and other official guidance where applicable [cite:59] |
-| Legacy regulations | Transitional procurement context under pre-2024 regimes [cite:59] |
-
-## Inspection Output
-
-TODS should produce an inspection-oriented output rather than a generic chatbot answer. The purpose of the output is to show what requirement was checked, what evidence supports or fails to support it, which specialist module produced the finding, what source/version was used, what risk exists and what action is required next.[cite:38][cite:59]
-
-A practical TODS inspection record should capture at least:
-
-- Inspection ID or correlation ID.
-- Requirement or control being checked.
-- Applicable source and version.
-- Evidence item or evidence gap.
-- Specialist module responsible.
-- Finding state such as supported, missing, inconsistent, unclear or escalated.
-- Required corrective action.
-- Human-review status and sign-off state.[cite:59]
-
-## Assurance Principles
-
-TODS should operate on these principles:
-
-1. Evidence before assertion.
-2. Official source governance through SKBUK.
-3. Version-aware inspection.
-4. Requirement traceability.
-5. Specialist-module accountability.
-6. Human review before consequential use.
-7. No automatic legal or procurement approval.
-8. Auditability of source, version, finding and action.[cite:38][cite:59]
-
-Model confidence must never be treated as a replacement for evidence. Likewise, a specialist module must never become the owner of the original document it analyses.[cite:59]
-
-## Human Review Boundary
-
-TODS supports document inspection and assurance, but it does not replace accountable human judgement. It should be used to support review before publication, submission, award or other consequential use in public procurement.[cite:44][cite:38]
-
-A human reviewer remains responsible for accepting findings, requiring more evidence, correcting documents, escalating issues and formally signing off the result.[cite:44]
-
-## Ecosystem Position
-
-Within the wider HoneyB2024 ecosystem, TODS Gateway is the assurance and inspection gate for procurement-document work. It is intended to operate alongside document-workflow and bid-production systems, but with a distinct role as the evidence-led checking and governance layer.[cite:37]
+MOUUK receives references and manifests from SKBUK. MOUUK does not own original PDFs.
 
 ```text
-Bidsmith / tender work
-        ↓
-Doccute / workflow operations
-        ↓
-TODS Gateway
-  ├─ SKBUK source governance
-  ├─ MOUUK specialist inspection
-  └─ Human review and sign-off
+UKKB/
+├── SKBUK/
+│   ├── documents/<document_id>/original.pdf
+│   ├── documents/<document_id>/metadata.json
+│   ├── delivery/MOUUK/MOUUK-0001.json ... MOUUK-0034.json
+│   ├── audit/events.jsonl
+│   └── source_registry.yaml
+├── MOUUK/MOUUK-0001 ... MOUUK-0034/
+└── docs/MOUUK_MODULE_CATALOGUE.md
 ```
 
-## Implementation Priorities
+## MOUUK expert layer
 
-The current implementation priorities should remain aligned with the authoritative processing boundary:
+MOUUK is the expert-knowledge layer containing exactly 34 modules. Each module has a defined identity and responsibility. A module may contain a manifest, specialist rules and delivery references, but the original source document remains canonical in SKBUK.
 
-1. Preserve SKBUK as the authoritative source-of-truth document layer.
-2. Maintain the approved source registry and provenance records.
-3. Maintain the MOUUK 34-module catalogue and specialist boundaries.
-4. Deliver authoritative references from SKBUK to MOUUK.
-5. Complete raw-PDF corpus acceptance before later extraction or retrieval phases.
-6. Build inspection outputs that show requirements, evidence, risk and action.
-7. Maintain audit records and version awareness across the lifecycle.[cite:37][cite:59]
+## Complete module catalogue
 
-## Documentation Rule
+The modules are intentionally listed in numeric order from `MOUUK-0001` to `MOUUK-0034`.
 
-TODS should be maintained under a documentation-first discipline. Anyone working on the project should read the authoritative manuals, catalogues and current approved documentation before changing architecture, README content, modules, processing boundaries or operational claims.[cite:48]
+| Code | Module | Responsibility | Key properties | Primary evidence |
+|---|---|---|---|---|
+| `MOUUK-0001` | Procurement Act 2023 | Expert on the Procurement Act 2023 statutory framework | Statutory interpretation, duties, procedures, thresholds, notices | legislation.gov.uk + official gov.uk guidance |
+| `MOUUK-0002` | Procurement Regulations 2024 | Expert on regulations made under the Procurement Act | Regulatory requirements, prescribed information, notices, procedures | legislation.gov.uk + gov.uk |
+| `MOUUK-0003` | Legacy Procurement Regulations | Expert on pre-2024 procurement regimes and transition | PCR 2015, UCR 2016, CCR 2016, DSPCR 2011, transitional context | legislation.gov.uk |
+| `MOUUK-0004` | Other Relevant Legislation | Expert on legislation affecting procurement outside the core Procurement Act | Cross-law applicability, statutory constraints, subject-specific legislation | legislation.gov.uk + official department guidance |
+| `MOUUK-0005` | Procurement Policy Notes and Policy Notices | Expert on Cabinet Office PPN requirements and policy notices | PPN applicability, mandatory/recommended actions, effective dates | gov.uk / Cabinet Office |
+| `MOUUK-0006` | National Procurement Policy Statement | Expert on NPPS priorities and applicability | National priorities, contracting-authority duties, policy alignment | gov.uk / Cabinet Office |
+| `MOUUK-0007` | Plan | Expert for procurement planning and pre-market strategy | Pipeline, objectives, governance, market strategy, route planning | Official government guidance / buyer policy |
+| `MOUUK-0008` | Define | Expert for requirements and specification definition | Outcomes, scope, requirements, evaluation design, market engagement | Official guidance / buyer documentation |
+| `MOUUK-0009` | Procure | Expert for the procurement execution stage | Procedures, tendering, evaluation, award, notices, compliance | Legislation + official guidance |
+| `MOUUK-0010` | Manage | Expert for post-award contract management | Performance, governance, change, payment, termination | Official contract-management guidance |
+| `MOUUK-0011` | Social Value | Expert on social-value procurement policy | Social-value objectives, evaluation, commitments, delivery | gov.uk + official policy |
+| `MOUUK-0012` | TOMs | Specialist child module of Social Value for Themes, Outcomes and Measures | TOMs mapping, measurement, metrics, social-value evidence | Official buyer/framework materials |
+| `MOUUK-0013` | Supplier Selection | Expert on supplier qualification and conditions of participation | SQ, conditions, selection criteria, financial/technical capability | Legislation + official guidance |
+| `MOUUK-0014` | Exclusion and Debarment | Expert on supplier exclusion and debarment | Mandatory/discretionary grounds, debarment list, due diligence | Legislation + Cabinet Office guidance |
+| `MOUUK-0015` | Transparency and Procurement Data | Expert on transparency obligations and procurement data | Notices, publication, Contracts Finder/CDP data, disclosure | Legislation + official platforms |
+| `MOUUK-0016` | Framework Agreements | Expert on framework procurement structures | Framework design, call-offs, award mechanisms, rules | Legislation + official guidance |
+| `MOUUK-0017` | Dynamic Markets | Expert on Dynamic Markets | Admission, operation, competition, supplier access | Legislation + official guidance |
+| `MOUUK-0018` | Contract Management and Open Book | Expert on contract performance and open-book management | KPIs, payment, open book, modification, governance | Official guidance + contract policy |
+| `MOUUK-0019` | Sustainability and Carbon | Expert on environmental and carbon requirements | Net zero, carbon reduction, environmental criteria, reporting | Official government policy/guidance |
+| `MOUUK-0020` | Modern Slavery and Responsible Supply Chain | Expert on modern slavery and responsible sourcing | Due diligence, supply-chain risk, reporting, remediation | Legislation + gov.uk guidance |
+| `MOUUK-0021` | Security and National Security | Expert on security-sensitive procurement | National security, security controls, supplier risk, classified context | Legislation + official security guidance |
+| `MOUUK-0022` | Data Protection and Information Governance | Expert on data protection and information governance in procurement | UK GDPR, DPA 2018, DPIA, information governance, records | Legislation + ICO/official guidance |
+| `MOUUK-0023` | Source Authority | Governance expert that determines whether evidence is authoritative | Source tier, publisher, jurisdiction, authority status, allow/reject | SKBUK Source Registry + official domains |
+| `MOUUK-0024` | Temporal and Version Intelligence | Governance expert for document currency | Publication/update dates, supersession, version comparison, effective periods | SKBUK provenance/version metadata |
+| `MOUUK-0025` | Cross-Governance Relationships | Expert on relationships between laws, policies, guidance and modules | Dependencies, conflicts, applicability, cross-module links | SKBUK provenance + official sources |
+| `MOUUK-0026` | Evidence and Provenance | Expert on traceability of every knowledge claim | Document ID, source URL, hash, citation chain, evidence status | SKBUK document metadata + audit trail |
+| `MOUUK-0027` | Procedures and Award Criteria | Expert on procurement procedure selection and award criteria design | Procedures, award criteria, evaluation | Legislation + official guidance |
+| `MOUUK-0028` | Notices, Standstill and Remedies | Expert on award notices, standstill and procurement remedies | Notices, challenge periods, remedies, court process | Legislation + official guidance |
+| `MOUUK-0029` | Below-threshold and Covered Procurement | Expert on below-threshold and covered procurement | Coverage, thresholds, procedures, transparency | Legislation + official guidance |
+| `MOUUK-0030` | Conflicts of Interest | Expert on conflicts of interest in procurement | Identification, mitigation, declarations, records | Legislation + official guidance |
+| `MOUUK-0031` | SME, VCSE and Reserved Contracts | Expert on SME, VCSE and reserved-contract policy | Access, reservation, participation, policy outcomes | Legislation + official guidance |
+| `MOUUK-0032` | Devolved and Sector Regimes | Expert on devolved administrations and sector-specific regimes | Jurisdiction, utilities, defence, sector rules | Legislation + official guidance |
+| `MOUUK-0033` | Economic and Financial Standing | Expert on supplier economic and financial standing | Financial assessment, insurance, evidence, proportionality | Legislation + official guidance |
+| `MOUUK-0034` | Insurance and Mandatory Policies | Expert on insurance and mandatory procurement policies | Insurance requirements, policy compliance, evidence | Legislation + official guidance |
 
-Obsolete instructions, superseded temporary installation notes and misleading implementation claims should be reviewed and removed from the active working path once their historical role has been assessed.[cite:47]
+## Processing boundary
+
+The current ingestion phase is raw-PDF only:
+
+```text
+discover -> validate -> store in SKBUK -> provenance/audit -> deliver reference manifest -> MOUUK
+```
+
+Only after the raw corpus is accepted should the later processing phase run:
+
+```text
+PDF -> extract -> normalize -> chunk -> embed -> retrieval
+```
+
+No MOUUK module may silently replace, modify or become the canonical owner of an original PDF.
+
+Git does not persist empty directories; runtime creates module and reference directories when a document is delivered.
+
+## Inspection output
+
+A TODS inspection should identify:
+
+- The requirement checked.
+- The applicable MOUUK module.
+- The source document.
+- The source version and effective period.
+- Evidence found or missing.
+- Finding status.
+- Risk or consequence.
+- Required action.
+- Human-review and sign-off state.
+
+Suggested statuses:
+
+```text
+supported
+missing
+incomplete
+inconsistent
+outdated
+unauthorised
+unclear
+escalated
+accepted
+rejected
+```
+
+## Human review boundary
+
+TODS supports evidence-led inspection. It does not provide legal advice, certify compliance, approve procurement or replace accountable human judgement.
+
+Consequential findings require human review and sign-off.
+
+## Implementation priorities
+
+1. Preserve original PDFs in SKBUK.
+2. Validate sources against the approved source registry.
+3. Record provenance, versions, hashes and audit events.
+4. Deliver controlled references to MOUUK.
+5. Maintain all 34 module boundaries.
+6. Accept the raw corpus before extraction, embedding or retrieval.
+7. Produce traceable findings with evidence and required actions.
 
 ## Disclaimer
 
-TODS Gateway supports evidence-led inspection of UK public-procurement documents. It does not provide legal advice, does not certify legal compliance and does not replace accountable procurement, legal or governance review.[cite:44][cite:38]
+TODS Gateway supports evidence-led inspection of UK public-procurement documents.
+
+It does not provide legal advice, certify legal compliance, approve procurement activity or replace accountable procurement, legal, governance or contracting-authority review.
